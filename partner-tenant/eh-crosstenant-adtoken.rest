@@ -1,0 +1,35 @@
+# This is an application that runs in partner-tenant.com, uses its own 
+# application registration credentials (secret or certificate), but requests
+# an access token against another Azure AD my-tenant.com. It uses this access
+# token securely send messages to the Event Hubs instance on my-tenant.com.
+
+# Also try acquiring access tokens against partner-tenant.com Azure AD
+# endpoint and sending it to Event Hubs - that should fail.
+
+@tenant = <my-tenant-id>
+@client_id = <client id or app id of the app registration>
+@client_secret = <client secret>
+@eh_namespace = <event hubs namespace without servicebus.windows.net suffix>
+@eh = <event hubs within the namespace>
+
+# @name login
+POST https://login.microsoftonline.com/{{tenant}}/oauth2/token HTTP/1.1  
+Content-Type: application/x-www-form-urlencoded  
+Host: login.microsoftonline.com 
+
+client_id={{client_id}}
+&resource= https%3A%2F%2Feventhubs.azure.net
+&client_secret={{client_secret}}
+&grant_type=client_credentials
+
+###
+
+# variable "login" we assigned to the request, so we get the access token from its response body
+@authToken = {{login.response.body.access_token}}
+
+POST https://{{eh_namespace}}.servicebus.windows.net/{{eh}}/messages?timeout=60&api-version=2014-01 HTTP/1.1  
+Authorization: Bearer {{authToken}}
+Content-Type: application/atom+xml;type=entry;charset=utf-8  
+Host: {{eh_namespace}}.servicebus.windows.net  
+
+{ "DeviceId":"dev-01", "Temperature":"25.0" }
