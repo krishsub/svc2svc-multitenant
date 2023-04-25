@@ -38,7 +38,7 @@ governance standpoint:
 resides) to generate SAS tokens or keys, their lifetime, distribute them
 to partners or customers, monitor their usage, revoke them if necessary,
 etc.
-2. Once distributed, you have no way to knowing how the partner or customer
+2. Once distributed, you have no way of knowing how the partner or customer
 is securing those tokens or keys and using them. Remember, those keys or
 tokens are owned by you - i.e. you generate them and hand them out.
 
@@ -87,22 +87,29 @@ to an Azure service in your tenant? Guest accounts won't work in this case.
 
 ## Multi-tenant application registrations to the rescue
 The concept of [multi-tenant application registrations][MultiTenantAppBasics]
-has existed for a long time. In our scenario, while we are leveraging
-multi-tenant application registrations, we are also side-stepping many of the
-challenges associated with it.
+has existed for a long time. 
 
-The primary challenge with multi-tenant *applications* is that sign-ins are
-accepted from any Azure AD tenant. For example, if a web application leverages
-a multi-tenant application registration, then user signs are permitted from
-other Azure AD tenants. **This is by-design**. It is then up to the
-application itself to implement any further authentication & authorization
-checks.
+The primary use-case (and some would say also the challenge) with multi-tenant
+*applications* is that sign-ins are accepted from any Azure AD tenant. For 
+example, if a web application leverages a multi-tenant application 
+registration, then user signs are permitted from other Azure AD tenants. 
+**This is by-design**. It is then up to the application itself to implement
+any further authentication & authorization checks.
 
-In our scenario, we are going to side-step this entirely by not using any
-user sign-ins. We instead rely on a very explicit way to grant (only) a
-specific partner's application registration access to resources in your
-own tenant. In some ways, it is the inverse of the way custom applications
-leverage multi-tenant app registrations!
+There are two important differences in the way we are using multi-tenant
+applications in our scenario:
+
+1. There is **no** web application in our scenario. This prevents sign-ins from
+other tenants.
+2. We instead rely on a very explicit way to grant (only) a specific partner's
+application registration access to resources in your own tenant. In some ways,
+it is the **inverse** of the way custom applications leverage multi-tenant app
+registrations! 
+
+> The above is not a commonly known use-case of multi-tenant application 
+> registrations. They are typically used in web applications, but here we are
+> leveraging them directly in our Azure services which may or may not use HTTPS
+> for any protocol level communication (e.g. Kafka, AMQP, etc.).
 
 Let's take an example of an Event Hub in your own tenant (`my-tenant.com`).
 You'd like a parter of yours (`partner-tenant.com`) to have certain
