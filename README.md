@@ -1,4 +1,4 @@
-# Cross-tenant Service-to-Service Communication using Azure AD
+# Cross-tenant Service-to-Service Communication using Azure AD authentication
 
 ## Description
 There are scenarios when an application or service running in one Azure AD
@@ -7,10 +7,16 @@ AD tenant. A common use-case could be when you want to enable a partner or
 customer of yours to exchange information with you (or the other way around).
 
 An option discussed here is to use Azure AD authentication in order for an
-application hosted in one Azure AD tenant to authenticate to an Azure service
-in another Azure AD tenant. This isn't about creating or exposing an API on
-top of that Azure service, but rather using the service's native connectivity
-options in order to directly communicate with that service.
+application hosted in one Azure AD tenant to securely authenticate using
+OAuth/OpenID Connect to an Azure service in another Azure AD tenant. This 
+isn't about creating or exposing an API on top of that Azure service, but 
+rather using the service's native connectivity options in order to directly
+communicate with that service.
+
+Almost all Azure services provide Azure AD authentication to securely
+connect to an Azure service. However, most of these mechanisms and samples
+illustrate how this access is set up and granted in the context of a single
+tenant only.
 
 In the context of this narrative and code samples, we refer to two Azure
 AD instances to illustrate cross-tenant access:
@@ -27,7 +33,7 @@ For example, many Azure services like [Azure Storage][StorageSas],
 [Event Hubs][EventHubsSas], [Service Bus][ServiceBusSas], etc. support using
 Shared Access signatures (SAS). Other Azure Services like CosmosDB,
 PostgreSQL, etc. support some form of key or username / password for
-authentication and authorization.
+authentication and authorization. 
 
 In a cross-tenant scenario, where the service is in one Azure AD tenant and
 the application(s) that makes use of that service are in another Azure AD
@@ -40,7 +46,7 @@ to partners or customers, monitor their usage, revoke them if necessary,
 etc.
 2. Once distributed, you have no way of knowing how the partner or customer
 is securing those tokens or keys and using them. Remember, those keys or
-tokens are owned by you - i.e. you generate them and hand them out.
+tokens are owned by you - i.e. you generate them and hand them out. 
 
 *Side note:* There are mechanisms from a networking perspective in order
 to further secure flows between 2 services in different (or same) tenants.
