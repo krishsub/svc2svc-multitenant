@@ -179,9 +179,12 @@ their tenant (`partner-tenant.com`) and sends you (the tenant where the service
  (`partner-tenant.com`) OR, your Azure AD tenant (`my-tenant.com`). Given
  that the Event Hubs namespace RBAC has specifically granted access to the
  service principal from step 2 above, the only access token which will work is
- the one from your own tenant (`my-tenant.com`).
- 4. A successful send where the access token is requested against your
- own tenant (`my-tenant.com`) should result in a response like:
+ the one from your own tenant (`my-tenant.com`). A 
+ [sample client application][SamplePartnerRestClient] running in the partner
+ tenant is simulated using a REST client application and illustrates how
+ tokens are acquired and used to call the Event Hub directly.
+ 4. A successful send where the partner application acquires an access token
+ against your own tenant (`my-tenant.com`) should result in a response like:
  ```
  HTTP/1.1 201 Created
  Transfer-Encoding: chunked
@@ -206,6 +209,7 @@ their tenant (`partner-tenant.com`) and sends you (the tenant where the service
  <!-- local links -->
  [CreateMultiTenantAppReg]: <./partner-tenant/create-multitenant-appreg.sh>
  [CreateSpAndEH]: <./my-tenant/create-svcprincipal-and-eventhubs.sh>
+ [SamplePartnerRestClient]: <./partner-tenant/eh-crosstenant-adtoken.rest?raw=1>
  [ImgEventHubs]: <./docs/media/EventHubs-Multitenant.png>
  [ImgAppReg]: <./docs/media/multitenant-appreg-partner-aad.png>
  [ImgAppSecret]: <./docs/media/secret-appreg-partner-aad.png>
